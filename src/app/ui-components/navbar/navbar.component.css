@@ -1,0 +1,14 @@
+.navbar {
+  display: flex;
+  gap: 1rem;
+  background-color: #333;
+  padding: 0.5rem 1rem;
+}
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+}
+.navbar a.active {
+  font-weight: bold;
+  border-bottom: 2px solid #fff;
+}
