@@ -1,1 +1,42 @@
-<p>stock-analyzer works!</p>
+<div class="analyzer">
+  <h2>Stock Analyzer</h2>
+
+  <form (ngSubmit)="load()" class="form">
+    <input
+      type="text"
+      name="ticker"
+      [(ngModel)]="inputTicker"
+      placeholder="Ticker (e.g., AAPL)"
+      [disabled]="loading"
+      required
+    />
+    <button type="submit" [disabled]="loading">Load</button>
+  </form>
+
+  <div class="loading" *ngIf="loading">Loading data...</div>
+  <div class="error" *ngIf="error && !loading">{{ error }}</div>
+
+  <!-- MACD Line Chart -->
+  <div *ngIf="macdChartData.datasets.length && !loading" class="chart">
+    <h3 class="ticker-label">{{ currentTicker }} - MACD</h3>
+    <canvas
+      baseChart
+      [data]="macdChartData"
+      [type]="chartType"
+      [options]="macdChartOptions">
+    </canvas>
+  </div>
+
+  <!-- RSI Line Chart -->
+  <div *ngIf="rsiChartData.datasets.length && !loading" class="chart">
+    <h3 class="ticker-label">{{ currentTicker }} - RSI</h3>
+    <p class="threshold-note">
+      RSI values 70 and above are considered overbought; values 30 and below are considered oversold.
+    </p>
+    <canvas
+      baseChart
+      [data]="rsiChartData"
+      [type]="chartType"
+      [options]="rsiChartOptions">
+    </canvas>
+  </div>

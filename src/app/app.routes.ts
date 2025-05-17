@@ -3,7 +3,7 @@ import { HomeComponent } from './home/home.component';
 import { StockAnalyzerComponent } from './stock-analyzer/stock-analyzer.component';
 
 export const routes: Routes = [
-  { path: '',          component: HomeComponent },
-  { path: 'home',      component: HomeComponent },
-  { path: 'stock-analyzer', component: StockAnalyzerComponent },
+  { path: '', component: HomeComponent, pathMatch: 'full'},
+  { path: 'home', component: HomeComponent},
+  { path: 'stock-analyzer', component: StockAnalyzerComponent}
 ];
