@@ -3,11 +3,10 @@ import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from "../ui-components/navbar/navbar.component";
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [FormsModule, NavbarComponent],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+    selector: 'app-home',
+    imports: [FormsModule, NavbarComponent],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.css'
 })
 export class HomeComponent {
 
