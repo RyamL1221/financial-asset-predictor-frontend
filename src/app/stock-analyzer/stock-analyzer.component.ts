@@ -22,6 +22,11 @@ export class StockAnalyzerComponent implements AfterViewInit {
   currentTicker: string = '';
   error:         string = '';
   loading:       boolean = false;
+  
+  companyName:        string = '';
+  country:            string = '';
+  shareOutstanding:   number | null = null;
+  weburl:             string = ''
 
   chartType: 'line' = 'line';
 
@@ -52,6 +57,10 @@ export class StockAnalyzerComponent implements AfterViewInit {
   load(): void {
     this.error = '';
     this.currentTicker = '';
+    this.companyName = '';
+    this.country = '';
+    this.shareOutstanding = null;
+    this.weburl = '';
     this.macdChartData = { labels: [], datasets: [] };
     this.rsiChartData = { labels: [], datasets: [] };
     this.loading = true;
@@ -65,6 +74,10 @@ export class StockAnalyzerComponent implements AfterViewInit {
 
     this.api.getStockTicker(ticker).subscribe({
       next: (res: StockTickerResponse) => {
+        this.companyName      = res.name || '';
+        this.country          = res.country || '';
+        this.shareOutstanding = res.shareOutstanding ?? null;
+        this.weburl           = res.weburl || '';
         this.currentTicker = ticker;
         this.buildChart(res);
         this.loading = false;

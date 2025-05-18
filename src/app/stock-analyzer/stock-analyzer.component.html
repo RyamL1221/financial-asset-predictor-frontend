@@ -16,6 +16,17 @@
   <div class="loading" *ngIf="loading">Loading data...</div>
   <div class="error" *ngIf="error && !loading">{{ error }}</div>
 
+    <!-- COMPANY INFO -->
+  <div *ngIf="!loading && currentTicker" class="company-info">
+    <h3>{{ companyName }} ({{ currentTicker }})</h3>
+    <p>
+      <strong>Country:</strong> {{ country }}<br>
+      <strong>Shares Outstanding:</strong>
+      {{ shareOutstanding !== null ? (shareOutstanding | number:'1.0-0') : '—' }}<br>
+      <strong>Website:</strong>
+      <a [href]="weburl" target="_blank">{{ weburl }}</a>
+    </p>
+  </div>
   <!-- MACD Line Chart -->
   <div *ngIf="macdChartData.datasets.length && !loading" class="chart">
     <h3 class="ticker-label">{{ currentTicker }} - MACD</h3>
