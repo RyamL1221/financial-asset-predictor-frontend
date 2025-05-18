@@ -4,6 +4,13 @@
   font-family: Arial, sans-serif;
 }
 
+.company-info {
+  background: #f9f9f9;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+}
+
 .form {
   display: flex;
   gap: 0.5rem;

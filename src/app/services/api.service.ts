@@ -20,6 +20,10 @@ export interface StockTickerResponse {
   ticker: string;
   macd:   MacdEntry[];
   rsi:    RsiEntry[];
+  country: string;
+  name:    string;
+  shareOutstanding: number;
+  weburl: string;
 }
 
 @Injectable({
