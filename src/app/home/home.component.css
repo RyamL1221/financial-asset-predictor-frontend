@@ -2,5 +2,27 @@
   max-width: 600px;
   margin: 2rem auto;
   text-align: center;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.home-container h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #ffffff, rgb(18, 127, 230));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+  text-shadow: 0 0 5px rgba(18, 127, 230, 0.6), 0 0 20px rgba(18, 127, 230, 0.4), 0 0 30px rgba(18, 127, 230, 0.2);
+}
+
+.home-container p {
+  font-size: 1.25rem;
+  color: #b0b0b0;
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
 }
