@@ -11,9 +11,9 @@
 
 /* Register Card */
 .register-card {
-  background: white;
+  background: #ffffff;
   border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   padding: 40px;
   width: 100%;
   max-width: 450px;
@@ -38,7 +38,7 @@
 }
 
 .register-header h1 {
-  color: #2d3748;
+  color: #1a202c;
   font-size: 2rem;
   font-weight: 700;
   margin: 0 0 8px 0;
@@ -46,7 +46,7 @@
 }
 
 .register-header p {
-  color: #718096;
+  color: #4a5568;
   font-size: 1rem;
   margin: 0;
   line-height: 1.5;
@@ -67,7 +67,7 @@
 }
 
 .form-label {
-  color: #4a5568;
+  color: #2d3748;
   font-size: 0.875rem;
   font-weight: 600;
   margin: 0;
@@ -87,15 +87,15 @@
   border-radius: 12px;
   font-size: 1rem;
   transition: all 0.2s ease;
-  background: #f7fafc;
-  color: #2d3748;
+  background: #ffffff;
+  color: #1a202c;
   outline: none;
 }
 
 .form-input:focus {
-  border-color: #667eea;
+  border-color: #3182ce;
   background: white;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
 }
 
 .form-input.error {
@@ -108,14 +108,14 @@
 }
 
 .form-input::placeholder {
-  color: #a0aec0;
+  color: #718096;
 }
 
 /* Input Icons */
 .input-icon {
   position: absolute;
   right: 16px;
-  color: #a0aec0;
+  color: #718096;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,7 +123,7 @@
 }
 
 .input-wrapper:focus-within .input-icon {
-  color: #667eea;
+  color: #3182ce;
 }
 
 .password-toggle {
@@ -135,12 +135,12 @@
 
 .password-toggle:hover {
   background-color: #f7fafc;
-  color: #4a5568;
+  color: #2d3748;
 }
 
 /* Error Messages */
 .error-message {
-  color: #e53e3e;
+  color: #c53030;
   font-size: 0.875rem;
   margin: 0;
   animation: fadeIn 0.2s ease;
@@ -159,8 +159,8 @@
 
 /* Submit Button */
 .submit-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+  color: #ffffff;
   border: none;
   border-radius: 12px;
   padding: 16px 24px;
@@ -175,7 +175,8 @@
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 10px 25px rgba(49, 130, 206, 0.4);
+  background: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
 }
 
 .submit-btn:active:not(:disabled) {
@@ -222,20 +223,20 @@
 }
 
 .login-link p {
-  color: #718096;
+  color: #4a5568;
   font-size: 0.875rem;
   margin: 0;
 }
 
 .link {
-  color: #667eea;
+  color: #3182ce;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s ease;
 }
 
 .link:hover {
-  color: #5a67d8;
+  color: #2b6cb0;
   text-decoration: underline;
 }
 
@@ -269,22 +270,23 @@
 .form-input:focus,
 .submit-btn:focus,
 .password-toggle:focus {
-  outline: 2px solid #667eea;
+  outline: 2px solid #3182ce;
   outline-offset: 2px;
 }
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
   .register-card {
-    border: 2px solid #2d3748;
+    border: 2px solid #1a202c;
   }
   
   .form-input {
     border-width: 2px;
+    border-color: #1a202c;
   }
   
   .submit-btn {
-    border: 2px solid #667eea;
+    border: 2px solid #3182ce;
   }
 }
 
