@@ -3,7 +3,7 @@ import { CommonModule }                        from '@angular/common';
 import { FormsModule }                         from '@angular/forms';
 import { BaseChartDirective }                  from 'ng2-charts';
 import { Chart, registerables, ChartDataset, ChartConfiguration } from 'chart.js';
-import { ApiService, StockTickerResponse, MacdEntry, RsiEntry }    from '../services/api.service';
+import { ApiService, StockTickerResponse, MacdEntry, RsiEntry, BetaEntry, BollingerBandsEntry, EpsData }    from '../services/api.service';
 
 // register all Chart.js components
 Chart.register(...registerables);
@@ -26,7 +26,10 @@ export class StockAnalyzerComponent implements AfterViewInit {
   companyName:        string = '';
   country:            string = '';
   shareOutstanding:   number | null = null;
-  weburl:             string = ''
+  weburl:             string = '';
+  roic:               number | null = null;
+  ey:                 number | null = null;
+  epsData:            EpsData | null = null;
 
   chartType: 'line' = 'line';
 
@@ -48,6 +51,24 @@ export class StockAnalyzerComponent implements AfterViewInit {
     }
   };
 
+  public betaChartData: ChartConfiguration<'line'>['data'] = { labels: [], datasets: [] };
+  public betaChartOptions: ChartConfiguration<'line'>['options'] = {
+    responsive: true,
+    scales: {
+      x: { title: { display: true, text: 'Date' } },
+      y: { title: { display: true, text: 'Beta Value' } }
+    }
+  };
+
+  public bollingerBandsChartData: ChartConfiguration<'line'>['data'] = { labels: [], datasets: [] };
+  public bollingerBandsChartOptions: ChartConfiguration<'line'>['options'] = {
+    responsive: true,
+    scales: {
+      x: { title: { display: true, text: 'Date' } },
+      y: { title: { display: true, text: 'Price' } }
+    }
+  };
+
   constructor(private api: ApiService) {}
 
   ngAfterViewInit(): void {
@@ -61,8 +82,13 @@ export class StockAnalyzerComponent implements AfterViewInit {
     this.country = '';
     this.shareOutstanding = null;
     this.weburl = '';
+    this.roic = null;
+    this.ey = null;
+    this.epsData = null;
     this.macdChartData = { labels: [], datasets: [] };
     this.rsiChartData = { labels: [], datasets: [] };
+    this.betaChartData = { labels: [], datasets: [] };
+    this.bollingerBandsChartData = { labels: [], datasets: [] };
     this.loading = true;
 
     const ticker = this.inputTicker.trim().toUpperCase();
@@ -78,8 +104,11 @@ export class StockAnalyzerComponent implements AfterViewInit {
         this.country          = res.country || '';
         this.shareOutstanding = res.shareOutstanding ?? null;
         this.weburl           = res.weburl || '';
+        this.roic             = res.roic ?? null;
+        this.ey               = res.ey ?? null;
+        this.epsData          = res.eps || null;
         this.currentTicker = ticker;
-        this.buildChart(res);
+        this.buildCharts(res);
         this.loading = false;
       },
       error: (err) => {
@@ -93,39 +122,160 @@ export class StockAnalyzerComponent implements AfterViewInit {
     });
   }
 
-  private buildChart(data: StockTickerResponse): void {
+  private buildCharts(data: StockTickerResponse): void {
     // Reverse entries to chronological order (past → future)
     const macdEntries = [...data.macd].reverse();
     const rsiEntries  = [...data.rsi].reverse();
+    const betaEntries = [...data.beta].reverse();
+    const bollingerEntries = [...data.bollinger_bands].reverse();
 
-    const labels = macdEntries.map((e: MacdEntry) =>
+    const macdLabels = macdEntries.map((e: MacdEntry) =>
       new Date(e.timestamp).toLocaleDateString()
     );
 
+    const rsiLabels = rsiEntries.map((e: RsiEntry) =>
+      new Date(e.timestamp).toLocaleDateString()
+    );
+
+    const betaLabels = betaEntries.map((e: BetaEntry) =>
+      new Date(e.datetime).toLocaleDateString()
+    );
+
+    const bollingerLabels = bollingerEntries.map((e: BollingerBandsEntry) =>
+      new Date(e.datetime).toLocaleDateString()
+    );
+
+    // MACD Chart
     this.macdChartData = {
-      labels,
+      labels: macdLabels,
       datasets: [
         {
           data: macdEntries.map(e => e.value),
           label: 'MACD',
           fill: false,
-          borderWidth: 2
+          borderWidth: 2,
+          borderColor: '#3182ce'
+        } as ChartDataset<'line'>,
+        {
+          data: macdEntries.map(e => e.signal),
+          label: 'Signal',
+          fill: false,
+          borderWidth: 2,
+          borderColor: '#e53e3e'
+        } as ChartDataset<'line'>,
+        {
+          data: macdEntries.map(e => e.histogram),
+          label: 'Histogram',
+          fill: false,
+          borderWidth: 2,
+          borderColor: '#38a169'
         } as ChartDataset<'line'>
       ]
     };
 
+    // RSI Chart
     this.rsiChartData = {
-      labels,
+      labels: rsiLabels,
       datasets: [
         {
           data: rsiEntries.map(e => e.value),
           label: 'RSI',
           fill: false,
-          borderWidth: 2
+          borderWidth: 2,
+          borderColor: '#3182ce'
+        } as ChartDataset<'line'>,
+        {
+          data: Array(rsiLabels.length).fill(70),
+          label: 'Overbought (70)',
+          fill: false,
+          borderWidth: 1,
+          borderColor: '#e53e3e',
+          borderDash: [5, 5]
+        } as ChartDataset<'line'>,
+        {
+          data: Array(rsiLabels.length).fill(30),
+          label: 'Oversold (30)',
+          fill: false,
+          borderWidth: 1,
+          borderColor: '#38a169',
+          borderDash: [5, 5]
+        } as ChartDataset<'line'>
+      ]
+    };
+
+    // Beta Chart
+    this.betaChartData = {
+      labels: betaLabels,
+      datasets: [
+        {
+          data: betaEntries.map(e => parseFloat(e.beta)),
+          label: 'Beta',
+          fill: false,
+          borderWidth: 2,
+          borderColor: '#3182ce'
+        } as ChartDataset<'line'>,
+        {
+          data: Array(betaLabels.length).fill(1),
+          label: 'Market Beta (1.0)',
+          fill: false,
+          borderWidth: 1,
+          borderColor: '#e53e3e',
+          borderDash: [5, 5]
+        } as ChartDataset<'line'>
+      ]
+    };
+
+    // Bollinger Bands Chart
+    this.bollingerBandsChartData = {
+      labels: bollingerLabels,
+      datasets: [
+        {
+          data: bollingerEntries.map(e => parseFloat(e.upper_band)),
+          label: 'Upper Band',
+          fill: false,
+          borderWidth: 2,
+          borderColor: '#e53e3e'
+        } as ChartDataset<'line'>,
+        {
+          data: bollingerEntries.map(e => parseFloat(e.middle_band)),
+          label: 'Middle Band (SMA)',
+          fill: false,
+          borderWidth: 2,
+          borderColor: '#3182ce'
+        } as ChartDataset<'line'>,
+        {
+          data: bollingerEntries.map(e => parseFloat(e.lower_band)),
+          label: 'Lower Band',
+          fill: false,
+          borderWidth: 2,
+          borderColor: '#38a169'
         } as ChartDataset<'line'>
       ]
     };
 
     this.chart?.update();
+  }
+
+  getCurrentEps(): number | null {
+    if (!this.epsData?.current) return null;
+    return this.epsData.current['0y']; // Current year EPS
+  }
+
+  getEpsGrowth(): number | null {
+    if (!this.epsData?.current) return null;
+    const current = this.epsData.current['0y'];
+    const nextYear = this.epsData.current['+1y'];
+    if (current === 0) return null;
+    return ((nextYear - current) / current) * 100;
+  }
+
+  formatPercentage(value: number | null): string {
+    if (value === null) return '—';
+    return `${value.toFixed(2)}%`;
+  }
+
+  formatNumber(value: number | null): string {
+    if (value === null) return '—';
+    return value.toFixed(4);
   }
 }

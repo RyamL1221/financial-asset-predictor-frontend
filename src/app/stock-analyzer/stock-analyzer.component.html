@@ -2,7 +2,7 @@
   <div class="analyzer-card">
     <div class="analyzer-header">
       <h2>Stock Analyzer</h2>
-      <p>Enter a stock ticker to analyze MACD and RSI indicators</p>
+      <p>Enter a stock ticker to analyze comprehensive financial indicators and receive buy/sell/hold recommendations</p>
     </div>
 
     <form (ngSubmit)="load()" class="analyzer-form">
@@ -39,7 +39,7 @@
 
     <div class="loading-message" *ngIf="loading">
       <div class="loading-spinner"></div>
-      <p>Loading data...</p>
+      <p>Loading comprehensive stock analysis...</p>
     </div>
     
     <div class="error-message" *ngIf="error && !loading">
@@ -56,9 +56,40 @@
       </div>
     </div>
 
+    <!-- FINANCIAL METRICS -->
+    <div *ngIf="!loading && currentTicker" class="metrics-section">
+      <h3 class="section-title">Financial Metrics</h3>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <h4>ROIC</h4>
+          <p class="metric-value">{{ formatPercentage(roic) }}</p>
+          <p class="metric-description">Return on Invested Capital</p>
+        </div>
+        <div class="metric-card">
+          <h4>Earnings Yield</h4>
+          <p class="metric-value">{{ formatPercentage(ey) }}</p>
+          <p class="metric-description">Earnings per Share / Price</p>
+        </div>
+        <div class="metric-card">
+          <h4>Current EPS</h4>
+          <p class="metric-value">{{ getCurrentEps()?.toFixed(2) || '—' }}</p>
+          <p class="metric-description">Earnings Per Share (Current Year)</p>
+        </div>
+        <div class="metric-card">
+          <h4>EPS Growth</h4>
+          <p class="metric-value">{{ formatPercentage(getEpsGrowth()) }}</p>
+          <p class="metric-description">Year-over-Year Growth</p>
+        </div>
+      </div>
+    </div>
+
     <!-- MACD Line Chart -->
     <div *ngIf="macdChartData.datasets.length && !loading" class="chart-container">
-      <h3 class="chart-title">{{ currentTicker }} - MACD</h3>
+      <h3 class="chart-title">{{ currentTicker }} - MACD Analysis</h3>
+      <p class="chart-description">
+        MACD (Moving Average Convergence Divergence) shows momentum and potential trend changes. 
+        Signal line crossovers and histogram patterns indicate buy/sell signals.
+      </p>
       <div class="chart">
         <canvas
           baseChart
@@ -71,9 +102,10 @@
 
     <!-- RSI Line Chart -->
     <div *ngIf="rsiChartData.datasets.length && !loading" class="chart-container">
-      <h3 class="chart-title">{{ currentTicker }} - RSI</h3>
-      <p class="threshold-note">
-        RSI values 70 and above are considered overbought; values 30 and below are considered oversold.
+      <h3 class="chart-title">{{ currentTicker }} - RSI Analysis</h3>
+      <p class="chart-description">
+        RSI (Relative Strength Index) measures momentum. Values above 70 indicate overbought conditions, 
+        while values below 30 indicate oversold conditions.
       </p>
       <div class="chart">
         <canvas
@@ -81,6 +113,40 @@
           [data]="rsiChartData"
           [type]="chartType"
           [options]="rsiChartOptions">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Beta Chart -->
+    <div *ngIf="betaChartData.datasets.length && !loading" class="chart-container">
+      <h3 class="chart-title">{{ currentTicker }} - Beta Analysis</h3>
+      <p class="chart-description">
+        Beta measures stock volatility relative to the market. Beta > 1 indicates higher volatility than the market, 
+        while Beta < 1 indicates lower volatility.
+      </p>
+      <div class="chart">
+        <canvas
+          baseChart
+          [data]="betaChartData"
+          [type]="chartType"
+          [options]="betaChartOptions">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Bollinger Bands Chart -->
+    <div *ngIf="bollingerBandsChartData.datasets.length && !loading" class="chart-container">
+      <h3 class="chart-title">{{ currentTicker }} - Bollinger Bands Analysis</h3>
+      <p class="chart-description">
+        Bollinger Bands show price volatility and potential support/resistance levels. 
+        Price touching the upper band may indicate overbought conditions, while touching the lower band may indicate oversold conditions.
+      </p>
+      <div class="chart">
+        <canvas
+          baseChart
+          [data]="bollingerBandsChartData"
+          [type]="chartType"
+          [options]="bollingerBandsChartOptions">
         </canvas>
       </div>
     </div>
