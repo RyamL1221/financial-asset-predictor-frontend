@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AuthService, RegisterRequest } from '../services';
 
 @Component({
   selector: 'app-register',
@@ -12,8 +13,10 @@ export class RegisterComponent {
   registerForm: FormGroup;
   isSubmitting = false;
   showPassword = false;
+  errorMessage = '';
+  successMessage = '';
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private authService: AuthService) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
@@ -47,13 +50,31 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       this.isSubmitting = true;
-      console.log('Registration form submitted:', this.registerForm.value);
+      this.errorMessage = '';
+      this.successMessage = '';
       
-      // Simulate API call
-      setTimeout(() => {
-        this.isSubmitting = false;
-        // Handle success/error here
-      }, 2000);
+      const registerData: RegisterRequest = {
+        email: this.registerForm.get('email')?.value,
+        password: this.registerForm.get('password')?.value,
+        confirmPassword: this.registerForm.get('confirmPassword')?.value
+      };
+      
+      this.authService.register(registerData).subscribe({
+        next: (response) => {
+          this.isSubmitting = false;
+          if (response.success) {
+            this.successMessage = response.message || 'Registration successful!';
+            this.registerForm.reset();
+            // Optionally redirect to login or dashboard
+          } else {
+            this.errorMessage = response.message || 'Registration failed. Please try again.';
+          }
+        },
+        error: (error) => {
+          this.isSubmitting = false;
+          this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
+        }
+      });
     } else {
       this.markFormGroupTouched();
     }

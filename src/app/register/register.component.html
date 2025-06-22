@@ -5,6 +5,16 @@
       <p>Join us to start predicting financial assets</p>
     </div>
 
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="success-message">
+      <p>{{ successMessage }}</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message-global">
+      <p>{{ errorMessage }}</p>
+    </div>
+
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
       <!-- Email Field -->
       <div class="form-group">

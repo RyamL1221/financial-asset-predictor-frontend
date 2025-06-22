@@ -146,6 +146,39 @@
   animation: fadeIn 0.2s ease;
 }
 
+/* Global Success and Error Messages */
+.success-message {
+  background: #c6f6d5;
+  border: 1px solid #38a169;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+.success-message p {
+  color: #22543d;
+  font-size: 0.875rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.error-message-global {
+  background: #fed7d7;
+  border: 1px solid #e53e3e;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+.error-message-global p {
+  color: #742a2a;
+  font-size: 0.875rem;
+  margin: 0;
+  font-weight: 500;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

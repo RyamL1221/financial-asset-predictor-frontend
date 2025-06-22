@@ -3,7 +3,7 @@ import { CommonModule }                        from '@angular/common';
 import { FormsModule }                         from '@angular/forms';
 import { BaseChartDirective }                  from 'ng2-charts';
 import { Chart, registerables, ChartDataset, ChartConfiguration } from 'chart.js';
-import { ApiService, StockTickerResponse, MacdEntry, RsiEntry, BetaEntry, BollingerBandsEntry, EpsData }    from '../services/api.service';
+import { StockService, StockTickerResponse, MacdEntry, RsiEntry, BetaEntry, BollingerBandsEntry, EpsData }    from '../services';
 
 // register all Chart.js components
 Chart.register(...registerables);
@@ -161,7 +161,7 @@ export class StockAnalyzerComponent implements AfterViewInit {
     }
   };
 
-  constructor(private api: ApiService) {}
+  constructor(private stockService: StockService) {}
 
   ngAfterViewInit(): void {
     // Chart directive initialized
@@ -198,7 +198,7 @@ export class StockAnalyzerComponent implements AfterViewInit {
       return;
     }
 
-    this.api.getStockTicker(ticker).subscribe({
+    this.stockService.getStockTicker(ticker).subscribe({
       next: (res: StockTickerResponse) => {
         this.companyName      = res.name || '';
         this.country          = res.country || '';
