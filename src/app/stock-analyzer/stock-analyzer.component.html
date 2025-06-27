@@ -5,6 +5,10 @@
       <p>Enter a stock ticker to analyze comprehensive financial indicators and receive buy/sell/hold recommendations</p>
     </div>
 
+    <div class="error-message" *ngIf="error && !loading">
+      <p>{{ error }}</p>
+    </div>
+
     <form (ngSubmit)="load()" class="analyzer-form">
       <div class="form-group">
         <label for="ticker-input" class="form-label">Stock Ticker</label>
@@ -37,16 +41,7 @@
       </button>
     </form>
 
-    <div class="loading-message" *ngIf="loading">
-      <div class="loading-spinner"></div>
-      <p>Loading comprehensive stock analysis...</p>
-    </div>
-    
-    <div class="error-message" *ngIf="error && !loading">
-      <p>{{ error }}</p>
-    </div>
-
-    <!-- RECOMMENDATION SCALE DEFINITION -->
+    <!-- RECOMMENDATION SCALE DEFINITION - Always visible -->
     <div class="recommendation-scale-section">
       <h3 class="section-title">Recommendation Scale</h3>
       <p class="scale-description">
@@ -61,7 +56,7 @@
       </p>
       
       <div class="scale-grid">
-        <div *ngFor="let scale of recommendationScale" class="scale-card" [style.border-left-color]="scale.color">
+        <div *ngFor="let scale of staticRecommendationScale" class="scale-card" [style.border-left-color]="scale.color">
           <div class="scale-header">
             <h4 class="scale-name">{{ scale.name }}</h4>
             <span class="scale-alias">{{ scale.alias }}</span>
@@ -69,19 +64,24 @@
           <p class="scale-description-text">{{ scale.description }}</p>
           <div class="scale-details">
             <div class="scale-detail">
-              <strong>Expected Return:</strong> {{ scale.expectedReturn }}
+              <strong>Expected Return:</strong> {{ scale.expected_return }}
             </div>
             <div class="scale-detail">
-              <strong>Risk Level:</strong> {{ scale.riskLevel }}
+              <strong>Risk Level:</strong> {{ scale.risk_level }}
             </div>
             <div class="scale-detail">
-              <strong>Time Horizon:</strong> {{ scale.timeHorizon }}
+              <strong>Time Horizon:</strong> {{ scale.time_horizon }}
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    <div class="loading-message" *ngIf="loading">
+      <div class="loading-spinner"></div>
+      <p>Loading comprehensive stock analysis...</p>
+    </div>
+    
     <!-- COMPREHENSIVE CURRENT RECOMMENDATION -->
     <div *ngIf="currentRecommendation" class="current-recommendation-section">
       <h3 class="section-title">Comprehensive Analysis & Recommendation for {{ currentTicker }}</h3>
@@ -134,7 +134,7 @@
           <div class="detail-section">
             <h5>Technical Factors:</h5>
             <ul class="technical-list">
-              <li *ngFor="let factor of currentRecommendation.technicalFactors">{{ factor }}</li>
+              <li *ngFor="let factor of currentRecommendation.technical_factors">{{ factor }}</li>
             </ul>
           </div>
           
@@ -142,13 +142,13 @@
             <h5>Investment Summary:</h5>
             <div class="investment-summary">
               <div class="summary-item">
-                <strong>Expected Return:</strong> {{ getRecommendationScale(currentRecommendation.type)?.expectedReturn }}
+                <strong>Expected Return:</strong> {{ getRecommendationScale(currentRecommendation.type)?.expected_return }}
               </div>
               <div class="summary-item">
-                <strong>Risk Level:</strong> {{ getRecommendationScale(currentRecommendation.type)?.riskLevel }}
+                <strong>Risk Level:</strong> {{ getRecommendationScale(currentRecommendation.type)?.risk_level }}
               </div>
               <div class="summary-item">
-                <strong>Time Horizon:</strong> {{ getRecommendationScale(currentRecommendation.type)?.timeHorizon }}
+                <strong>Time Horizon:</strong> {{ getRecommendationScale(currentRecommendation.type)?.time_horizon }}
               </div>
             </div>
           </div>
@@ -204,24 +204,24 @@
       </p>
       
       <!-- MACD Recommendation -->
-      <div *ngIf="macdRecommendation" class="indicator-recommendation" [style.border-color]="getRecommendationColor(macdRecommendation)" [style.background-color]="getRecommendationBackground(macdRecommendation)">
+      <div *ngIf="getMacdRecommendation()" class="indicator-recommendation" [style.border-color]="getRecommendationColor(getMacdRecommendation()!)" [style.background-color]="getRecommendationBackground(getMacdRecommendation()!)">
         <div class="indicator-header">
-          <h4 class="indicator-title">MACD Recommendation: {{ getRecommendationScale(macdRecommendation)?.name }}</h4>
-          <span class="indicator-alias">{{ getRecommendationScale(macdRecommendation)?.alias }}</span>
+          <h4 class="indicator-title">MACD Recommendation: {{ getRecommendationScale(getMacdRecommendation()!)?.name }}</h4>
+          <span class="indicator-alias">{{ getRecommendationScale(getMacdRecommendation()!)?.alias }}</span>
         </div>
         <p class="indicator-disclaimer">
           <strong>Note:</strong> This recommendation is based purely on MACD analysis only and should not be considered as an overall assessment.
         </p>
-        <p class="indicator-analysis">{{ macdAnalysis }}</p>
+        <p class="indicator-analysis">{{ getMacdAnalysis() }}</p>
         <div class="indicator-details">
           <div class="indicator-detail">
-            <strong>Expected Return:</strong> {{ getRecommendationScale(macdRecommendation)?.expectedReturn }}
+            <strong>Expected Return:</strong> {{ getRecommendationScale(getMacdRecommendation()!)?.expected_return }}
           </div>
           <div class="indicator-detail">
-            <strong>Risk Level:</strong> {{ getRecommendationScale(macdRecommendation)?.riskLevel }}
+            <strong>Risk Level:</strong> {{ getRecommendationScale(getMacdRecommendation()!)?.risk_level }}
           </div>
           <div class="indicator-detail">
-            <strong>Time Horizon:</strong> {{ getRecommendationScale(macdRecommendation)?.timeHorizon }}
+            <strong>Time Horizon:</strong> {{ getRecommendationScale(getMacdRecommendation()!)?.time_horizon }}
           </div>
         </div>
       </div>
@@ -245,24 +245,24 @@
       </p>
       
       <!-- RSI Recommendation -->
-      <div *ngIf="rsiRecommendation" class="indicator-recommendation" [style.border-color]="getRecommendationColor(rsiRecommendation)" [style.background-color]="getRecommendationBackground(rsiRecommendation)">
+      <div *ngIf="getRsiRecommendation()" class="indicator-recommendation" [style.border-color]="getRecommendationColor(getRsiRecommendation()!)" [style.background-color]="getRecommendationBackground(getRsiRecommendation()!)">
         <div class="indicator-header">
-          <h4 class="indicator-title">RSI Recommendation: {{ getRecommendationScale(rsiRecommendation)?.name }}</h4>
-          <span class="indicator-alias">{{ getRecommendationScale(rsiRecommendation)?.alias }}</span>
+          <h4 class="indicator-title">RSI Recommendation: {{ getRecommendationScale(getRsiRecommendation()!)?.name }}</h4>
+          <span class="indicator-alias">{{ getRecommendationScale(getRsiRecommendation()!)?.alias }}</span>
         </div>
         <p class="indicator-disclaimer">
           <strong>Note:</strong> This recommendation is based purely on RSI analysis only and should not be considered as an overall assessment.
         </p>
-        <p class="indicator-analysis">{{ rsiAnalysis }}</p>
+        <p class="indicator-analysis">{{ getRsiAnalysis() }}</p>
         <div class="indicator-details">
           <div class="indicator-detail">
-            <strong>Expected Return:</strong> {{ getRecommendationScale(rsiRecommendation)?.expectedReturn }}
+            <strong>Expected Return:</strong> {{ getRecommendationScale(getRsiRecommendation()!)?.expected_return }}
           </div>
           <div class="indicator-detail">
-            <strong>Risk Level:</strong> {{ getRecommendationScale(rsiRecommendation)?.riskLevel }}
+            <strong>Risk Level:</strong> {{ getRecommendationScale(getRsiRecommendation()!)?.risk_level }}
           </div>
           <div class="indicator-detail">
-            <strong>Time Horizon:</strong> {{ getRecommendationScale(rsiRecommendation)?.timeHorizon }}
+            <strong>Time Horizon:</strong> {{ getRecommendationScale(getRsiRecommendation()!)?.time_horizon }}
           </div>
         </div>
       </div>
@@ -303,24 +303,24 @@
       </p>
       
       <!-- Bollinger Bands Recommendation -->
-      <div *ngIf="bollingerRecommendation" class="indicator-recommendation" [style.border-color]="getRecommendationColor(bollingerRecommendation)" [style.background-color]="getRecommendationBackground(bollingerRecommendation)">
+      <div *ngIf="getBollingerRecommendation()" class="indicator-recommendation" [style.border-color]="getRecommendationColor(getBollingerRecommendation()!)" [style.background-color]="getRecommendationBackground(getBollingerRecommendation()!)">
         <div class="indicator-header">
-          <h4 class="indicator-title">Bollinger Bands Recommendation: {{ getRecommendationScale(bollingerRecommendation)?.name }}</h4>
-          <span class="indicator-alias">{{ getRecommendationScale(bollingerRecommendation)?.alias }}</span>
+          <h4 class="indicator-title">Bollinger Bands Recommendation: {{ getRecommendationScale(getBollingerRecommendation()!)?.name }}</h4>
+          <span class="indicator-alias">{{ getRecommendationScale(getBollingerRecommendation()!)?.alias }}</span>
         </div>
         <p class="indicator-disclaimer">
           <strong>Note:</strong> This recommendation is based purely on Bollinger Bands analysis only and should not be considered as an overall assessment.
         </p>
-        <p class="indicator-analysis">{{ bollingerAnalysis }}</p>
+        <p class="indicator-analysis">{{ getBollingerAnalysis() }}</p>
         <div class="indicator-details">
           <div class="indicator-detail">
-            <strong>Expected Return:</strong> {{ getRecommendationScale(bollingerRecommendation)?.expectedReturn }}
+            <strong>Expected Return:</strong> {{ getRecommendationScale(getBollingerRecommendation()!)?.expected_return }}
           </div>
           <div class="indicator-detail">
-            <strong>Risk Level:</strong> {{ getRecommendationScale(bollingerRecommendation)?.riskLevel }}
+            <strong>Risk Level:</strong> {{ getRecommendationScale(getBollingerRecommendation()!)?.risk_level }}
           </div>
           <div class="indicator-detail">
-            <strong>Time Horizon:</strong> {{ getRecommendationScale(bollingerRecommendation)?.timeHorizon }}
+            <strong>Time Horizon:</strong> {{ getRecommendationScale(getBollingerRecommendation()!)?.time_horizon }}
           </div>
         </div>
       </div>
