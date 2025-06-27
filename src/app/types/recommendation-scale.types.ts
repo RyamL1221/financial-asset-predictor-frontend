@@ -19,6 +19,14 @@ export interface CurrentRecommendation {
   type: string;
 }
 
+export interface OverallRecommendation {
+  confidence: number;
+  description: string;
+  reasoning: string[];
+  recommendation_type: string;
+  technical_factors: string[];
+}
+
 export interface EpsAnalysis {
   current: number;
   growth_percentage: number;
@@ -34,9 +42,9 @@ export interface TechnicalAnalysis {
 }
 
 export interface AnalysisData {
-  current_recommendation: CurrentRecommendation;
   eps_analysis: EpsAnalysis;
   macd_signals: CurrentRecommendation[];
+  overall_recommendation: OverallRecommendation;
   recommendation_scale: RecommendationScale[];
   technical_analysis: TechnicalAnalysis;
 }
