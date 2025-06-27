@@ -43,19 +43,75 @@ export interface EpsPeriod {
   '0y': number;
 }
 
-export interface StockTickerResponse {
-  ticker: string;
-  macd:   MacdEntry[];
-  rsi:    RsiEntry[];
-  beta:   BetaEntry[];
-  bollinger_bands: BollingerBandsEntry[];
-  eps:    EpsData;
-  roic:   number;
-  ey:     number;
+export interface CompanyProfile {
   country: string;
-  name:    string;
+  currency: string;
+  estimateCurrency: string;
+  exchange: string;
+  finnhubIndustry: string;
+  ipo: string;
+  logo: string;
+  marketCapitalization: number;
+  name: string;
+  phone: string;
   shareOutstanding: number;
+  ticker: string;
   weburl: string;
+}
+
+export interface RecommendationScale {
+  type: string;
+  name: string;
+  alias: string;
+  description: string;
+  expected_return: string;
+  risk_level: string;
+  time_horizon: string;
+  color: string;
+  background_color: string;
+}
+
+export interface CurrentRecommendation {
+  confidence: number;
+  date: string;
+  description: string;
+  reasoning: string[];
+  technical_factors: string[];
+  type: string;
+}
+
+export interface EpsAnalysis {
+  current: number;
+  growth_percentage: number;
+}
+
+export interface TechnicalAnalysis {
+  bollinger_analysis: string;
+  bollinger_recommendation: string;
+  macd_analysis: string;
+  macd_recommendation: string;
+  rsi_analysis: string;
+  rsi_recommendation: string;
+}
+
+export interface AnalysisData {
+  current_recommendation: CurrentRecommendation;
+  eps_analysis: EpsAnalysis;
+  macd_signals: CurrentRecommendation[];
+  recommendation_scale: RecommendationScale[];
+  technical_analysis: TechnicalAnalysis;
+}
+
+export interface StockTickerResponse {
+  analysis: AnalysisData;
+  beta: BetaEntry[];
+  bollinger_bands: BollingerBandsEntry[];
+  eps: EpsData;
+  ey: number;
+  macd: MacdEntry[];
+  profile: CompanyProfile;
+  roic: number;
+  rsi: RsiEntry[];
 }
 
 @Injectable({
@@ -74,6 +130,7 @@ export class ApiService {
    * - EPS data
    * - ROIC and EY metrics
    * - Company profile information
+   * - Comprehensive analysis and recommendations
    */
   getStockTicker(ticker: string): Observable<StockTickerResponse> {
     const url = `${this.baseUrl}/${ENDPOINTS.GET_STOCK_TICKER}/${ticker}`;
