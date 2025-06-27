@@ -4,7 +4,7 @@ import { FormsModule }                         from '@angular/forms';
 import { BaseChartDirective }                  from 'ng2-charts';
 import { Chart, registerables, ChartDataset, ChartConfiguration } from 'chart.js';
 import { ApiService, StockTickerResponse, MacdEntry, RsiEntry, BetaEntry, BollingerBandsEntry, EpsData }    from '../services/api.service';
-import { RecommendationScale, CurrentRecommendation, TechnicalAnalysis, STATIC_RECOMMENDATION_SCALE } from '../types/recommendation-scale.types';
+import { RecommendationScale, OverallRecommendation, TechnicalAnalysis, STATIC_RECOMMENDATION_SCALE } from '../types/recommendation-scale.types';
 
 // register all Chart.js components
 Chart.register(...registerables);
@@ -33,7 +33,7 @@ export class StockAnalyzerComponent implements AfterViewInit {
   roic:               number | null = null;
   ey:                 number | null = null;
   epsData:            EpsData | null = null;
-  currentRecommendation: CurrentRecommendation | null = null;
+  overallRecommendation: OverallRecommendation | null = null;
   recommendationScale: RecommendationScale[] = [];
   technicalAnalysis: TechnicalAnalysis | null = null;
   epsAnalysis: { current: number; growth_percentage: number } | null = null;
@@ -95,7 +95,7 @@ export class StockAnalyzerComponent implements AfterViewInit {
     this.roic = null;
     this.ey = null;
     this.epsData = null;
-    this.currentRecommendation = null;
+    this.overallRecommendation = null;
     this.recommendationScale = [];
     this.technicalAnalysis = null;
     this.epsAnalysis = null;
@@ -124,7 +124,7 @@ export class StockAnalyzerComponent implements AfterViewInit {
         this.currentTicker = ticker;
         
         // Set analysis data from backend
-        this.currentRecommendation = res.analysis.current_recommendation;
+        this.overallRecommendation = res.analysis.overall_recommendation;
         this.recommendationScale = res.analysis.recommendation_scale;
         this.technicalAnalysis = res.analysis.technical_analysis;
         this.epsAnalysis = res.analysis.eps_analysis;

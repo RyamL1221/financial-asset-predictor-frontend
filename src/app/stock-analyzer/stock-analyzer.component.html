@@ -41,6 +41,11 @@
       </button>
     </form>
 
+    <div class="loading-message" *ngIf="loading">
+      <div class="loading-spinner"></div>
+      <p>Loading comprehensive stock analysis...</p>
+    </div>
+
     <!-- RECOMMENDATION SCALE DEFINITION - Always visible -->
     <div class="recommendation-scale-section">
       <h3 class="section-title">Recommendation Scale</h3>
@@ -77,13 +82,8 @@
       </div>
     </div>
 
-    <div class="loading-message" *ngIf="loading">
-      <div class="loading-spinner"></div>
-      <p>Loading comprehensive stock analysis...</p>
-    </div>
-    
     <!-- COMPREHENSIVE CURRENT RECOMMENDATION -->
-    <div *ngIf="currentRecommendation" class="current-recommendation-section">
+    <div *ngIf="overallRecommendation" class="current-recommendation-section">
       <h3 class="section-title">Comprehensive Analysis & Recommendation for {{ currentTicker }}</h3>
       <p class="comprehensive-description">
         This recommendation is based on a comprehensive analysis of all available technical indicators including MACD, RSI, 
@@ -91,33 +91,33 @@
         relying on any single indicator.
       </p>
       
-      <div class="recommendation-card" [style.border-color]="getRecommendationColor(currentRecommendation.type)" [style.background-color]="getRecommendationBackground(currentRecommendation.type)">
+      <div class="recommendation-card" [style.border-color]="getRecommendationColor(overallRecommendation.recommendation_type)" [style.background-color]="getRecommendationBackground(overallRecommendation.recommendation_type)">
         <div class="recommendation-header">
           <div class="recommendation-icon">
-            <svg *ngIf="currentRecommendation.type === 'BUY' || currentRecommendation.type === 'OUTPERFORM'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg *ngIf="overallRecommendation.recommendation_type === 'BUY' || overallRecommendation.recommendation_type === 'OUTPERFORM'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M7 14l5-5 5 5"/>
               <path d="M12 19V5"/>
             </svg>
-            <svg *ngIf="currentRecommendation.type === 'SELL' || currentRecommendation.type === 'UNDERPERFORM'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg *ngIf="overallRecommendation.recommendation_type === 'SELL' || overallRecommendation.recommendation_type === 'UNDERPERFORM'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M7 10l5 5 5-5"/>
               <path d="M12 5v14"/>
             </svg>
-            <svg *ngIf="currentRecommendation.type === 'HOLD'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg *ngIf="overallRecommendation.recommendation_type === 'HOLD'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 5v14"/>
               <path d="M5 12h14"/>
             </svg>
           </div>
           <div class="recommendation-content">
-            <h4 class="recommendation-title">{{ getRecommendationScale(currentRecommendation.type)?.name }}</h4>
-            <p class="recommendation-subtitle">{{ getRecommendationScale(currentRecommendation.type)?.alias }}</p>
-            <p class="recommendation-description">{{ currentRecommendation.description }}</p>
+            <h4 class="recommendation-title">{{ getRecommendationScale(overallRecommendation.recommendation_type)?.name }}</h4>
+            <p class="recommendation-subtitle">{{ getRecommendationScale(overallRecommendation.recommendation_type)?.alias }}</p>
+            <p class="recommendation-description">{{ overallRecommendation.description }}</p>
             
             <div class="confidence-meter">
               <div class="confidence-label">
-                <strong>Confidence Level:</strong> {{ currentRecommendation.confidence }}%
+                <strong>Confidence Level:</strong> {{ overallRecommendation.confidence }}%
               </div>
               <div class="confidence-bar">
-                <div class="confidence-fill" [style.width.%]="currentRecommendation.confidence" [style.background-color]="getRecommendationColor(currentRecommendation.type)"></div>
+                <div class="confidence-fill" [style.width.%]="overallRecommendation.confidence" [style.background-color]="getRecommendationColor(overallRecommendation.recommendation_type)"></div>
               </div>
             </div>
           </div>
@@ -127,14 +127,14 @@
           <div class="detail-section">
             <h5>Key Reasoning:</h5>
             <ul class="reasoning-list">
-              <li *ngFor="let reason of currentRecommendation.reasoning">{{ reason }}</li>
+              <li *ngFor="let reason of overallRecommendation.reasoning">{{ reason }}</li>
             </ul>
           </div>
           
           <div class="detail-section">
             <h5>Technical Factors:</h5>
             <ul class="technical-list">
-              <li *ngFor="let factor of currentRecommendation.technical_factors">{{ factor }}</li>
+              <li *ngFor="let factor of overallRecommendation.technical_factors">{{ factor }}</li>
             </ul>
           </div>
           
@@ -142,13 +142,13 @@
             <h5>Investment Summary:</h5>
             <div class="investment-summary">
               <div class="summary-item">
-                <strong>Expected Return:</strong> {{ getRecommendationScale(currentRecommendation.type)?.expected_return }}
+                <strong>Expected Return:</strong> {{ getRecommendationScale(overallRecommendation.recommendation_type)?.expected_return }}
               </div>
               <div class="summary-item">
-                <strong>Risk Level:</strong> {{ getRecommendationScale(currentRecommendation.type)?.risk_level }}
+                <strong>Risk Level:</strong> {{ getRecommendationScale(overallRecommendation.recommendation_type)?.risk_level }}
               </div>
               <div class="summary-item">
-                <strong>Time Horizon:</strong> {{ getRecommendationScale(currentRecommendation.type)?.time_horizon }}
+                <strong>Time Horizon:</strong> {{ getRecommendationScale(overallRecommendation.recommendation_type)?.time_horizon }}
               </div>
             </div>
           </div>
