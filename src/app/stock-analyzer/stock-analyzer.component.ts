@@ -3,7 +3,8 @@ import { CommonModule }                        from '@angular/common';
 import { FormsModule }                         from '@angular/forms';
 import { BaseChartDirective }                  from 'ng2-charts';
 import { Chart, registerables, ChartDataset, ChartConfiguration } from 'chart.js';
-import { ApiService, StockTickerResponse, MacdEntry, RsiEntry, BetaEntry, BollingerBandsEntry, EpsData, RecommendationScale, CurrentRecommendation, TechnicalAnalysis }    from '../services/api.service';
+import { ApiService, StockTickerResponse, MacdEntry, RsiEntry, BetaEntry, BollingerBandsEntry, EpsData }    from '../services/api.service';
+import { RecommendationScale, CurrentRecommendation, TechnicalAnalysis, STATIC_RECOMMENDATION_SCALE } from '../types/recommendation-scale.types';
 
 // register all Chart.js components
 Chart.register(...registerables);
@@ -36,6 +37,9 @@ export class StockAnalyzerComponent implements AfterViewInit {
   recommendationScale: RecommendationScale[] = [];
   technicalAnalysis: TechnicalAnalysis | null = null;
   epsAnalysis: { current: number; growth_percentage: number } | null = null;
+
+  // Static recommendation scale for display before API call
+  staticRecommendationScale: RecommendationScale[] = STATIC_RECOMMENDATION_SCALE;
 
   chartType: 'line' = 'line';
 

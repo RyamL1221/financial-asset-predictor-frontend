@@ -5,6 +5,10 @@
       <p>Enter a stock ticker to analyze comprehensive financial indicators and receive buy/sell/hold recommendations</p>
     </div>
 
+    <div class="error-message" *ngIf="error && !loading">
+      <p>{{ error }}</p>
+    </div>
+
     <form (ngSubmit)="load()" class="analyzer-form">
       <div class="form-group">
         <label for="ticker-input" class="form-label">Stock Ticker</label>
@@ -37,17 +41,8 @@
       </button>
     </form>
 
-    <div class="loading-message" *ngIf="loading">
-      <div class="loading-spinner"></div>
-      <p>Loading comprehensive stock analysis...</p>
-    </div>
-    
-    <div class="error-message" *ngIf="error && !loading">
-      <p>{{ error }}</p>
-    </div>
-
-    <!-- RECOMMENDATION SCALE DEFINITION -->
-    <div class="recommendation-scale-section" *ngIf="recommendationScale.length > 0">
+    <!-- RECOMMENDATION SCALE DEFINITION - Always visible -->
+    <div class="recommendation-scale-section">
       <h3 class="section-title">Recommendation Scale</h3>
       <p class="scale-description">
         Our analysis uses a comprehensive 5-point recommendation scale based on technical indicators, 
@@ -61,7 +56,7 @@
       </p>
       
       <div class="scale-grid">
-        <div *ngFor="let scale of recommendationScale" class="scale-card" [style.border-left-color]="scale.color">
+        <div *ngFor="let scale of staticRecommendationScale" class="scale-card" [style.border-left-color]="scale.color">
           <div class="scale-header">
             <h4 class="scale-name">{{ scale.name }}</h4>
             <span class="scale-alias">{{ scale.alias }}</span>
@@ -82,6 +77,11 @@
       </div>
     </div>
 
+    <div class="loading-message" *ngIf="loading">
+      <div class="loading-spinner"></div>
+      <p>Loading comprehensive stock analysis...</p>
+    </div>
+    
     <!-- COMPREHENSIVE CURRENT RECOMMENDATION -->
     <div *ngIf="currentRecommendation" class="current-recommendation-section">
       <h3 class="section-title">Comprehensive Analysis & Recommendation for {{ currentTicker }}</h3>

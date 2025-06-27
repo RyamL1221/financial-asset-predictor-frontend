@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ENDPOINTS } from './endpoints';
+import { RecommendationScale, CurrentRecommendation, EpsAnalysis, TechnicalAnalysis, AnalysisData } from '../types/recommendation-scale.types';
 
 export interface MacdEntry {
   histogram: number;
@@ -57,49 +58,6 @@ export interface CompanyProfile {
   shareOutstanding: number;
   ticker: string;
   weburl: string;
-}
-
-export interface RecommendationScale {
-  type: string;
-  name: string;
-  alias: string;
-  description: string;
-  expected_return: string;
-  risk_level: string;
-  time_horizon: string;
-  color: string;
-  background_color: string;
-}
-
-export interface CurrentRecommendation {
-  confidence: number;
-  date: string;
-  description: string;
-  reasoning: string[];
-  technical_factors: string[];
-  type: string;
-}
-
-export interface EpsAnalysis {
-  current: number;
-  growth_percentage: number;
-}
-
-export interface TechnicalAnalysis {
-  bollinger_analysis: string;
-  bollinger_recommendation: string;
-  macd_analysis: string;
-  macd_recommendation: string;
-  rsi_analysis: string;
-  rsi_recommendation: string;
-}
-
-export interface AnalysisData {
-  current_recommendation: CurrentRecommendation;
-  eps_analysis: EpsAnalysis;
-  macd_signals: CurrentRecommendation[];
-  recommendation_scale: RecommendationScale[];
-  technical_analysis: TechnicalAnalysis;
 }
 
 export interface StockTickerResponse {
