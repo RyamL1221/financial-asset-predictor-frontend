@@ -1,42 +1,338 @@
-<div class="analyzer">
-  <h2>Stock Analyzer</h2>
+<div class="analyzer-container">
+  <div class="analyzer-card">
+    <div class="analyzer-header">
+      <h2>Stock Analyzer</h2>
+      <p>Enter a stock ticker to analyze comprehensive financial indicators and receive buy/sell/hold recommendations</p>
+    </div>
 
-  <form (ngSubmit)="load()" class="form">
-    <input
-      type="text"
-      name="ticker"
-      [(ngModel)]="inputTicker"
-      placeholder="Ticker (e.g., AAPL)"
-      [disabled]="loading"
-      required
-    />
-    <button type="submit" [disabled]="loading">Load</button>
-  </form>
+    <div class="error-message" *ngIf="error && !loading">
+      <p>{{ error }}</p>
+    </div>
 
-  <div class="loading" *ngIf="loading">Loading data...</div>
-  <div class="error" *ngIf="error && !loading">{{ error }}</div>
+    <form (ngSubmit)="load()" class="analyzer-form">
+      <div class="form-group">
+        <label for="ticker-input" class="form-label">Stock Ticker</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="ticker-input"
+            name="ticker"
+            [(ngModel)]="inputTicker"
+            placeholder="Enter ticker (e.g., AAPL)"
+            [disabled]="loading"
+            required
+            class="form-input"
+          />
+          <div class="input-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <button type="submit" [disabled]="loading" class="submit-btn">
+        <span *ngIf="!loading">Analyze Stock</span>
+        <span *ngIf="loading" class="loading-text">
+          <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12a9 9 0 11-6.219-8.56"/>
+          </svg>
+          Loading...
+        </span>
+      </button>
+    </form>
 
-  <!-- MACD Line Chart -->
-  <div *ngIf="macdChartData.datasets.length && !loading" class="chart">
-    <h3 class="ticker-label">{{ currentTicker }} - MACD</h3>
-    <canvas
-      baseChart
-      [data]="macdChartData"
-      [type]="chartType"
-      [options]="macdChartOptions">
-    </canvas>
+    <div class="loading-message" *ngIf="loading">
+      <div class="loading-spinner"></div>
+      <p>Loading comprehensive stock analysis...</p>
+    </div>
+
+    <!-- RECOMMENDATION SCALE DEFINITION - Always visible -->
+    <div class="recommendation-scale-section">
+      <h3 class="section-title">Recommendation Scale</h3>
+      <p class="scale-description">
+        Our analysis uses a comprehensive 5-point recommendation scale based on technical indicators, 
+        fundamental metrics, and market performance expectations. Each recommendation includes expected returns, 
+        risk levels, and time horizons to help you make informed investment decisions.
+      </p>
+      <p class="time-horizon-definition">
+        <strong>Time Horizon Definition:</strong> The time horizon indicates the expected duration for which the recommendation is valid. 
+        Longer horizons (3-12 months) suggest the analysis expects the trend to persist, while shorter horizons (1-3 months) 
+        indicate more immediate or volatile conditions that may require quicker action.
+      </p>
+      
+      <div class="scale-grid">
+        <div *ngFor="let scale of staticRecommendationScale" class="scale-card" [style.border-left-color]="scale.color">
+          <div class="scale-header">
+            <h4 class="scale-name">{{ scale.name }}</h4>
+            <span class="scale-alias">{{ scale.alias }}</span>
+          </div>
+          <p class="scale-description-text">{{ scale.description }}</p>
+          <div class="scale-details">
+            <div class="scale-detail">
+              <strong>Expected Return:</strong> {{ scale.expected_return }}
+            </div>
+            <div class="scale-detail">
+              <strong>Risk Level:</strong> {{ scale.risk_level }}
+            </div>
+            <div class="scale-detail">
+              <strong>Time Horizon:</strong> {{ scale.time_horizon }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPREHENSIVE CURRENT RECOMMENDATION -->
+    <div *ngIf="overallRecommendation" class="current-recommendation-section">
+      <h3 class="section-title">Comprehensive Analysis & Recommendation for {{ currentTicker }}</h3>
+      <p class="comprehensive-description">
+        This recommendation is based on a comprehensive analysis of all available technical indicators including MACD, RSI, 
+        Bollinger Bands, and fundamental metrics. It represents our overall assessment combining multiple factors rather than 
+        relying on any single indicator.
+      </p>
+      
+      <div class="recommendation-card" [style.border-color]="getRecommendationColor(overallRecommendation.recommendation_type)" [style.background-color]="getRecommendationBackground(overallRecommendation.recommendation_type)">
+        <div class="recommendation-header">
+          <div class="recommendation-icon">
+            <svg *ngIf="overallRecommendation.recommendation_type === 'BUY' || overallRecommendation.recommendation_type === 'OUTPERFORM'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M7 14l5-5 5 5"/>
+              <path d="M12 19V5"/>
+            </svg>
+            <svg *ngIf="overallRecommendation.recommendation_type === 'SELL' || overallRecommendation.recommendation_type === 'UNDERPERFORM'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M7 10l5 5 5-5"/>
+              <path d="M12 5v14"/>
+            </svg>
+            <svg *ngIf="overallRecommendation.recommendation_type === 'HOLD'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14"/>
+              <path d="M5 12h14"/>
+            </svg>
+          </div>
+          <div class="recommendation-content">
+            <h4 class="recommendation-title">{{ getRecommendationScale(overallRecommendation.recommendation_type)?.name }}</h4>
+            <p class="recommendation-subtitle">{{ getRecommendationScale(overallRecommendation.recommendation_type)?.alias }}</p>
+            <p class="recommendation-description">{{ overallRecommendation.description }}</p>
+            
+            <div class="confidence-meter">
+              <div class="confidence-label">
+                <strong>Confidence Level:</strong> {{ overallRecommendation.confidence }}%
+              </div>
+              <div class="confidence-bar">
+                <div class="confidence-fill" [style.width.%]="overallRecommendation.confidence" [style.background-color]="getRecommendationColor(overallRecommendation.recommendation_type)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="recommendation-details">
+          <div class="detail-section">
+            <h5>Key Reasoning:</h5>
+            <ul class="reasoning-list">
+              <li *ngFor="let reason of overallRecommendation.reasoning">{{ reason }}</li>
+            </ul>
+          </div>
+          
+          <div class="detail-section">
+            <h5>Technical Factors:</h5>
+            <ul class="technical-list">
+              <li *ngFor="let factor of overallRecommendation.technical_factors">{{ factor }}</li>
+            </ul>
+          </div>
+          
+          <div class="detail-section">
+            <h5>Investment Summary:</h5>
+            <div class="investment-summary">
+              <div class="summary-item">
+                <strong>Expected Return:</strong> {{ getRecommendationScale(overallRecommendation.recommendation_type)?.expected_return }}
+              </div>
+              <div class="summary-item">
+                <strong>Risk Level:</strong> {{ getRecommendationScale(overallRecommendation.recommendation_type)?.risk_level }}
+              </div>
+              <div class="summary-item">
+                <strong>Time Horizon:</strong> {{ getRecommendationScale(overallRecommendation.recommendation_type)?.time_horizon }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPANY INFO -->
+    <div *ngIf="!loading && currentTicker" class="company-info">
+      <h3>{{ companyName }} ({{ currentTicker }})</h3>
+      <div class="company-details">
+        <p><strong>Country:</strong> {{ country }}</p>
+        <p><strong>Shares Outstanding:</strong> {{ shareOutstanding !== null ? (shareOutstanding | number:'1.0-0') : '—' }}</p>
+        <p><strong>Website:</strong> <a [href]="weburl" target="_blank" class="company-link">{{ weburl }}</a></p>
+      </div>
+    </div>
+
+    <!-- FINANCIAL METRICS -->
+    <div *ngIf="!loading && currentTicker" class="metrics-section">
+      <h3 class="section-title">Financial Metrics</h3>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <h4>ROIC</h4>
+          <p class="metric-value">{{ formatPercentage(roic) }}</p>
+          <p class="metric-description">Return on Invested Capital</p>
+        </div>
+        <div class="metric-card">
+          <h4>Earnings Yield</h4>
+          <p class="metric-value">{{ formatPercentage(ey) }}</p>
+          <p class="metric-description">Earnings per Share / Price</p>
+        </div>
+        <div class="metric-card">
+          <h4>Current EPS</h4>
+          <p class="metric-value">{{ getCurrentEps()?.toFixed(2) || '—' }}</p>
+          <p class="metric-description">Earnings Per Share (Current Year)</p>
+        </div>
+        <div class="metric-card">
+          <h4>EPS Growth</h4>
+          <p class="metric-value">{{ formatPercentage(getEpsGrowth()) }}</p>
+          <p class="metric-description">Year-over-Year Growth</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MACD Line Chart -->
+    <div *ngIf="macdChartData.datasets.length && !loading" class="chart-container">
+      <h3 class="chart-title">{{ currentTicker }} - MACD Analysis</h3>
+      <p class="chart-description">
+        MACD (Moving Average Convergence Divergence) shows momentum and potential trend changes. 
+        <strong>BUY signals occur when the MACD line (blue) crosses above the signal line (red).</strong>
+        <strong>SELL signals occur when the MACD line crosses below the signal line.</strong>
+        The histogram (green) shows the difference between MACD and signal lines.
+      </p>
+      
+      <!-- MACD Recommendation -->
+      <div *ngIf="getMacdRecommendation()" class="indicator-recommendation" [style.border-color]="getRecommendationColor(getMacdRecommendation()!)" [style.background-color]="getRecommendationBackground(getMacdRecommendation()!)">
+        <div class="indicator-header">
+          <h4 class="indicator-title">MACD Recommendation: {{ getRecommendationScale(getMacdRecommendation()!)?.name }}</h4>
+          <span class="indicator-alias">{{ getRecommendationScale(getMacdRecommendation()!)?.alias }}</span>
+        </div>
+        <p class="indicator-disclaimer">
+          <strong>Note:</strong> This recommendation is based purely on MACD analysis only and should not be considered as an overall assessment.
+        </p>
+        <p class="indicator-analysis">{{ getMacdAnalysis() }}</p>
+        <div class="indicator-details">
+          <div class="indicator-detail">
+            <strong>Expected Return:</strong> {{ getRecommendationScale(getMacdRecommendation()!)?.expected_return }}
+          </div>
+          <div class="indicator-detail">
+            <strong>Risk Level:</strong> {{ getRecommendationScale(getMacdRecommendation()!)?.risk_level }}
+          </div>
+          <div class="indicator-detail">
+            <strong>Time Horizon:</strong> {{ getRecommendationScale(getMacdRecommendation()!)?.time_horizon }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart">
+        <canvas
+          baseChart
+          [data]="macdChartData"
+          [type]="chartType"
+          [options]="macdChartOptions">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- RSI Line Chart -->
+    <div *ngIf="rsiChartData.datasets.length && !loading" class="chart-container">
+      <h3 class="chart-title">{{ currentTicker }} - RSI Analysis</h3>
+      <p class="chart-description">
+        RSI (Relative Strength Index) measures momentum. Values above 70 indicate overbought conditions, 
+        while values below 30 indicate oversold conditions.
+      </p>
+      
+      <!-- RSI Recommendation -->
+      <div *ngIf="getRsiRecommendation()" class="indicator-recommendation" [style.border-color]="getRecommendationColor(getRsiRecommendation()!)" [style.background-color]="getRecommendationBackground(getRsiRecommendation()!)">
+        <div class="indicator-header">
+          <h4 class="indicator-title">RSI Recommendation: {{ getRecommendationScale(getRsiRecommendation()!)?.name }}</h4>
+          <span class="indicator-alias">{{ getRecommendationScale(getRsiRecommendation()!)?.alias }}</span>
+        </div>
+        <p class="indicator-disclaimer">
+          <strong>Note:</strong> This recommendation is based purely on RSI analysis only and should not be considered as an overall assessment.
+        </p>
+        <p class="indicator-analysis">{{ getRsiAnalysis() }}</p>
+        <div class="indicator-details">
+          <div class="indicator-detail">
+            <strong>Expected Return:</strong> {{ getRecommendationScale(getRsiRecommendation()!)?.expected_return }}
+          </div>
+          <div class="indicator-detail">
+            <strong>Risk Level:</strong> {{ getRecommendationScale(getRsiRecommendation()!)?.risk_level }}
+          </div>
+          <div class="indicator-detail">
+            <strong>Time Horizon:</strong> {{ getRecommendationScale(getRsiRecommendation()!)?.time_horizon }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart">
+        <canvas
+          baseChart
+          [data]="rsiChartData"
+          [type]="chartType"
+          [options]="rsiChartOptions">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Beta Chart -->
+    <div *ngIf="betaChartData.datasets.length && !loading" class="chart-container">
+      <h3 class="chart-title">{{ currentTicker }} - Beta Analysis</h3>
+      <p class="chart-description">
+        Beta measures stock volatility relative to the market. Beta > 1 indicates higher volatility than the market, 
+        while Beta < 1 indicates lower volatility.
+      </p>
+      <div class="chart">
+        <canvas
+          baseChart
+          [data]="betaChartData"
+          [type]="chartType"
+          [options]="betaChartOptions">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Bollinger Bands Chart -->
+    <div *ngIf="bollingerBandsChartData.datasets.length && !loading" class="chart-container">
+      <h3 class="chart-title">{{ currentTicker }} - Bollinger Bands Analysis</h3>
+      <p class="chart-description">
+        Bollinger Bands show price volatility and potential support/resistance levels. 
+        Price touching the upper band may indicate overbought conditions, while touching the lower band may indicate oversold conditions.
+      </p>
+      
+      <!-- Bollinger Bands Recommendation -->
+      <div *ngIf="getBollingerRecommendation()" class="indicator-recommendation" [style.border-color]="getRecommendationColor(getBollingerRecommendation()!)" [style.background-color]="getRecommendationBackground(getBollingerRecommendation()!)">
+        <div class="indicator-header">
+          <h4 class="indicator-title">Bollinger Bands Recommendation: {{ getRecommendationScale(getBollingerRecommendation()!)?.name }}</h4>
+          <span class="indicator-alias">{{ getRecommendationScale(getBollingerRecommendation()!)?.alias }}</span>
+        </div>
+        <p class="indicator-disclaimer">
+          <strong>Note:</strong> This recommendation is based purely on Bollinger Bands analysis only and should not be considered as an overall assessment.
+        </p>
+        <p class="indicator-analysis">{{ getBollingerAnalysis() }}</p>
+        <div class="indicator-details">
+          <div class="indicator-detail">
+            <strong>Expected Return:</strong> {{ getRecommendationScale(getBollingerRecommendation()!)?.expected_return }}
+          </div>
+          <div class="indicator-detail">
+            <strong>Risk Level:</strong> {{ getRecommendationScale(getBollingerRecommendation()!)?.risk_level }}
+          </div>
+          <div class="indicator-detail">
+            <strong>Time Horizon:</strong> {{ getRecommendationScale(getBollingerRecommendation()!)?.time_horizon }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart">
+        <canvas
+          baseChart
+          [data]="bollingerBandsChartData"
+          [type]="chartType"
+          [options]="bollingerBandsChartOptions">
+        </canvas>
+      </div>
+    </div>
   </div>
-
-  <!-- RSI Line Chart -->
-  <div *ngIf="rsiChartData.datasets.length && !loading" class="chart">
-    <h3 class="ticker-label">{{ currentTicker }} - RSI</h3>
-    <p class="threshold-note">
-      RSI values 70 and above are considered overbought; values 30 and below are considered oversold.
-    </p>
-    <canvas
-      baseChart
-      [data]="rsiChartData"
-      [type]="chartType"
-      [options]="rsiChartOptions">
-    </canvas>
-  </div>
+</div>
