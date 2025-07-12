@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ApiService } from '../services/api.service';
+import { RegisterRequest, RegisterResponse } from '../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -12,8 +14,10 @@ export class RegisterComponent {
   registerForm: FormGroup;
   isSubmitting = false;
   showPassword = false;
+  registrationMessage = '';
+  isSuccess = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private apiService: ApiService) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
@@ -47,13 +51,27 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       this.isSubmitting = true;
-      console.log('Registration form submitted:', this.registerForm.value);
+      this.registrationMessage = '';
+      this.isSuccess = false;
       
-      // Simulate API call
-      setTimeout(() => {
-        this.isSubmitting = false;
-        // Handle success/error here
-      }, 2000);
+      const registerData: RegisterRequest = {
+        email: this.registerForm.get('email')?.value,
+        password: this.registerForm.get('password')?.value
+      };
+      
+      this.apiService.register(registerData).subscribe({
+        next: (response: RegisterResponse) => {
+          this.isSubmitting = false;
+          this.isSuccess = true;
+          this.registrationMessage = response.message;
+          this.registerForm.reset();
+        },
+        error: (error) => {
+          this.isSubmitting = false;
+          this.isSuccess = false;
+          this.registrationMessage = error.error?.message || 'Registration failed. Please try again.';
+        }
+      });
     } else {
       this.markFormGroupTouched();
     }

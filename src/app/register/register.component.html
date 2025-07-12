@@ -103,6 +103,11 @@
       </button>
     </form>
 
+    <!-- Registration Message -->
+    <div *ngIf="registrationMessage" class="registration-message" [class.success]="isSuccess" [class.error]="!isSuccess">
+      {{ registrationMessage }}
+    </div>
+
     <!-- Login Link -->
     <div class="login-link">
       <p>Already have an account? <a href="#" class="link">Sign in</a></p>

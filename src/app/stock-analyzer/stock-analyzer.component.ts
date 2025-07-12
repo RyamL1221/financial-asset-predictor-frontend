@@ -3,7 +3,8 @@ import { CommonModule }                        from '@angular/common';
 import { FormsModule }                         from '@angular/forms';
 import { BaseChartDirective }                  from 'ng2-charts';
 import { Chart, registerables, ChartDataset, ChartConfiguration } from 'chart.js';
-import { ApiService, StockTickerResponse, MacdEntry, RsiEntry, BetaEntry, BollingerBandsEntry, EpsData }    from '../services/api.service';
+import { ApiService } from '../services/api.service';
+import { StockTickerResponse, MacdEntry, RsiEntry, BetaEntry, BollingerBandsEntry, EpsData } from '../services/stock-ticker.service';
 import { RecommendationScale, OverallRecommendation, TechnicalAnalysis, STATIC_RECOMMENDATION_SCALE } from '../types/recommendation-scale.types';
 
 // register all Chart.js components
