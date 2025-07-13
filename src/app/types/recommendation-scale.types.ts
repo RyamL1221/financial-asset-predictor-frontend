@@ -59,8 +59,8 @@ export const STATIC_RECOMMENDATION_SCALE: RecommendationScale[] = [
     expected_return: '15%+ above market',
     risk_level: 'Low to Medium',
     time_horizon: '3-12 months',
-    color: '#22543d',
-    background_color: '#c6f6d5'
+    color: '#48BB78',
+    background_color: '#C6F6D5'
   },
   {
     type: 'OUTPERFORM',
@@ -70,8 +70,8 @@ export const STATIC_RECOMMENDATION_SCALE: RecommendationScale[] = [
     expected_return: '5-15% above market',
     risk_level: 'Medium',
     time_horizon: '3-6 months',
-    color: '#38a169',
-    background_color: '#9ae6b4'
+    color: '#4299E1',
+    background_color: '#BEE3F8'
   },
   {
     type: 'HOLD',
@@ -81,8 +81,8 @@ export const STATIC_RECOMMENDATION_SCALE: RecommendationScale[] = [
     expected_return: 'Market performance',
     risk_level: 'Medium',
     time_horizon: '1-6 months',
-    color: '#4a5568',
-    background_color: '#f7fafc'
+    color: '#ECC94B',
+    background_color: '#FEF3C7'
   },
   {
     type: 'UNDERPERFORM',
@@ -92,8 +92,8 @@ export const STATIC_RECOMMENDATION_SCALE: RecommendationScale[] = [
     expected_return: '5-15% below market',
     risk_level: 'Medium',
     time_horizon: '1-6 months',
-    color: '#ed8936',
-    background_color: '#fffaf0'
+    color: '#ED8936',
+    background_color: '#FEEBC8'
   },
   {
     type: 'SELL',
@@ -103,7 +103,7 @@ export const STATIC_RECOMMENDATION_SCALE: RecommendationScale[] = [
     expected_return: '15%+ below market',
     risk_level: 'Medium to High',
     time_horizon: '1-3 months',
-    color: '#e53e3e',
-    background_color: '#fed7d7'
+    color: '#F56565',
+    background_color: '#FED7D7'
   }
 ]; 

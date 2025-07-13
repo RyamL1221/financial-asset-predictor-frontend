@@ -1,28 +1,146 @@
 .home-container {
+  /* Example background — swap out for your own media */
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin: 0 auto;
   max-width: 600px;
-  margin: 2rem auto;
   text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Tahoma, Geneva, Verdana,
+    Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
+/* Glass-effect card */
+.home-card {
+  /* much lighter tint */
+  background-color: rgba(255, 255, 255, 0.08);
+  /* stronger blur so content pops through */
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  /* remove hard border, rely on blur edge */
+  border: none;
+  /* softer, subtler shadow */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+  animation: slideUp 0.6s ease-out;
+  color: #ffffff;
+}
+
+/* Slide-up animation */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Headings with gradient text (contrast is fine against white) */
+.home-header h1,
 .home-container h1 {
   font-size: 3.5rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, #ffffff, rgb(18, 127, 230));
+  line-height: 1.2;
+  margin: 0 0 16px;
+  letter-spacing: -0.025em;
+  background: linear-gradient(135deg, #ffffff, #127fe6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  line-height: 1.2;
-  text-shadow: 0 0 5px rgba(18, 127, 230, 0.6), 0 0 20px rgba(18, 127, 230, 0.4), 0 0 30px rgba(18, 127, 230, 0.2);
+  /* subtle single-layer glow */
+  text-shadow: 0 0 4px rgba(18, 127, 230, 0.4);
 }
 
+
+/* Subtitle/intro stays high-contrast */
+.subtitle,
 .home-container p {
   font-size: 1.25rem;
-  color: #b0b0b0;
-  margin-bottom: 2.5rem;
+  line-height: 1.6;
+  color: #e2e8f0;     /* ~9.8:1 on our frosted panel */
+  margin: 0 0 2.5rem;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.6;
 }
+
+/* Body copy */
+.home-content p {
+  color: #e2e8f0;     /* still ≥7:1 */
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* CTA button with ≥4.5:1 contrast */
+.cta-button {
+  display: inline-block;
+  /* green gradient that stays ≥4.5:1 against white text */
+  background: linear-gradient(135deg, #00875f 0%, #005f40 100%);
+  color: #ffffff;
+  text-decoration: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  /* subtle green shadow */
+  box-shadow: 0 4px 12px rgba(0, 95, 64, 0.3);
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  /* brighter green glow on hover */
+  box-shadow: 0 8px 20px rgba(0, 135, 95, 0.4);
+}
+
+.cta-button:focus {
+  outline: 3px solid #ffffff;
+  outline-offset: 3px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .home-container { padding: 16px; }
+  .home-card {
+    padding: 24px;
+    border-radius: 16px;
+  }
+  .home-header h1 { font-size: 2rem; }
+  .subtitle { font-size: 1rem; }
+  .cta-button {
+    padding: 14px 24px;
+    font-size: 1rem;
+  }
+}
+
+/* High-contrast mode */
+@media (prefers-contrast: high) {
+  .home-card {
+    border: 2px solid #ffffff;
+  }
+  .cta-button {
+    border: 2px solid #ffffff;
+  }
+}
+
+/* Reduced-motion mode */
+@media (prefers-reduced-motion: reduce) {
+  .home-card,
+  .cta-button {
+    animation: none;
+    transition: none;
+  }
+} 
