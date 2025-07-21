@@ -1,1 +1,42 @@
-<p>login works!</p>
+<div class = "login-container">
+    <div class = "login-card">
+        <div class = "login-header">
+            <h1>Login</h1>
+        </div>
+
+    <form (ngSubmit)="onSubmit()" class = login-form>
+        <!--Email-field-->
+        <div class = "form-group">
+            <label for="email" class = "form-label"> Email Address</label>
+            <div class= "input-wrapper">
+        <input 
+            type = "text" 
+            id = "email" 
+            [(ngModel)] = "username" 
+            name="email"
+            placeholder = "Enter your email address"
+            required
+            >
+            </div>
+        </div>
+        <!--Password field-->
+        <div class = form-group>
+        <label for="password" class = form-label >Password</label>
+        <div class = "input-wrapper">
+        <input 
+        type = "password" 
+        id = "password" 
+        [(ngModel)] = "password" 
+        name ="passsword" 
+        placeholder="Enter your password"
+        required>
+        </div>
+        </div>
+        <button type = "submit" class = submit-button>Login</button>
+    </form>
+    <!-- Regsiter Link-->
+    <div class="register-link">
+      <p>Don't have an account? <a href="/register" class="link">Sign up</a></p>
+    </div>
+    </div>
+</div>
