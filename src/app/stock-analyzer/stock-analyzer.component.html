@@ -92,38 +92,55 @@
         relying on any single indicator.
       </p>
       
-      <div class="recommendation-card" [style.border-color]="getRecommendationColor(overallRecommendation.recommendation_type)" [style.background-color]="getRecommendationBackground(overallRecommendation.recommendation_type)">
+      <div
+        class="recommendation-card"
+        [attr.data-type]="overallRecommendation.recommendation_type"
+        [style.border-color]="getRecommendationColor(overallRecommendation.recommendation_type)"
+        [style.background-color]="getRecommendationBackground(overallRecommendation.recommendation_type)"
+        [style.--recommendation-color]="getRecommendationColor(overallRecommendation.recommendation_type)"
+        [style.--recommendation-bg]="getScaleBackground(getRecommendationScale(overallRecommendation.recommendation_type)!)"
+      >
+        <!-- Top header: icon + title/alias + confidence -->
         <div class="recommendation-header">
-          <div class="recommendation-icon">
-            <svg *ngIf="overallRecommendation.recommendation_type === 'BUY' || overallRecommendation.recommendation_type === 'OUTPERFORM'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M7 14l5-5 5 5"/>
-              <path d="M12 19V5"/>
-            </svg>
-            <svg *ngIf="overallRecommendation.recommendation_type === 'SELL' || overallRecommendation.recommendation_type === 'UNDERPERFORM'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M7 10l5 5 5-5"/>
-              <path d="M12 5v14"/>
-            </svg>
-            <svg *ngIf="overallRecommendation.recommendation_type === 'HOLD'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 5v14"/>
-              <path d="M5 12h14"/>
-            </svg>
+          <div class="recommendation-title-block">
+            <div class="recommendation-icon">
+              <svg *ngIf="overallRecommendation.recommendation_type === 'BUY' || overallRecommendation.recommendation_type === 'OUTPERFORM'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M7 14l5-5 5 5"/>
+                <path d="M12 19V5"/>
+              </svg>
+              <svg *ngIf="overallRecommendation.recommendation_type === 'SELL' || overallRecommendation.recommendation_type === 'UNDERPERFORM'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M7 10l5 5 5-5"/>
+                <path d="M12 5v14"/>
+              </svg>
+              <svg *ngIf="overallRecommendation.recommendation_type === 'HOLD'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14"/>
+                <path d="M5 12h14"/>
+              </svg>
+            </div>
+            <div class="recommendation-main-text">
+              <h4 class="recommendation-title">{{ getRecommendationScale(overallRecommendation.recommendation_type)?.name }}</h4>
+              <p class="recommendation-subtitle">{{ getRecommendationScale(overallRecommendation.recommendation_type)?.alias }}</p>
+            </div>
           </div>
-          <div class="recommendation-content">
-            <h4 class="recommendation-title">{{ getRecommendationScale(overallRecommendation.recommendation_type)?.name }}</h4>
-            <p class="recommendation-subtitle">{{ getRecommendationScale(overallRecommendation.recommendation_type)?.alias }}</p>
-            <p class="recommendation-description">{{ overallRecommendation.description }}</p>
-            
-            <div class="confidence-meter">
-              <div class="confidence-label">
-                <strong>Confidence Level:</strong> {{ overallRecommendation.confidence }}%
-              </div>
-              <div class="confidence-bar">
-                <div class="confidence-fill" [style.width.%]="overallRecommendation.confidence" [style.background-color]="getRecommendationColor(overallRecommendation.recommendation_type)"></div>
-              </div>
+
+          <div class="confidence-block">
+            <div class="confidence-label">
+              <strong>Confidence Level:</strong> {{ overallRecommendation.confidence }}%
+            </div>
+            <div class="confidence-bar">
+              <div
+                class="confidence-fill"
+                [style.width.%]="overallRecommendation.confidence"
+                [style.background-color]="getRecommendationColor(overallRecommendation.recommendation_type)"
+              ></div>
             </div>
           </div>
         </div>
-        
+
+        <!-- Description (separate, below header) -->
+        <p class="recommendation-description">{{ overallRecommendation.description }}</p>
+
+        <!-- Details grid (reasoning / technical / summary) -->
         <div class="recommendation-details">
           <div class="detail-section">
             <h5>Key Reasoning:</h5>
@@ -131,14 +148,14 @@
               <li *ngFor="let reason of overallRecommendation.reasoning">{{ reason }}</li>
             </ul>
           </div>
-          
+
           <div class="detail-section">
             <h5>Technical Factors:</h5>
             <ul class="technical-list">
               <li *ngFor="let factor of overallRecommendation.technical_factors">{{ factor }}</li>
             </ul>
           </div>
-          
+
           <div class="detail-section">
             <h5>Investment Summary:</h5>
             <div class="investment-summary">
@@ -205,10 +222,22 @@
       </p>
       
       <!-- MACD Recommendation -->
-      <div *ngIf="getMacdRecommendation()" class="indicator-recommendation" [style.border-color]="getRecommendationColor(getMacdRecommendation()!)" [style.background-color]="getRecommendationBackground(getMacdRecommendation()!)">
+      <div
+        *ngIf="getMacdRecommendation()"
+        class="indicator-recommendation"
+        [attr.data-type]="getMacdRecommendation()"
+        [style.border-left-color]="getRecommendationColor(getMacdRecommendation()!)"
+        [style.background-color]="getRecommendationBackground(getMacdRecommendation()!)"
+        [style.--recommendation-color]="getRecommendationColor(getMacdRecommendation()!)"
+        [style.--recommendation-bg]="getScaleBackground(getRecommendationScale(getMacdRecommendation()!)!)"
+      >
         <div class="indicator-header">
-          <h4 class="indicator-title">MACD Recommendation: {{ getRecommendationScale(getMacdRecommendation()!)?.name }}</h4>
-          <span class="indicator-alias">{{ getRecommendationScale(getMacdRecommendation()!)?.alias }}</span>
+          <h4 class="indicator-title">
+            MACD Recommendation: {{ getRecommendationScale(getMacdRecommendation()!)?.name }}
+          </h4>
+          <span class="indicator-alias">
+            {{ getRecommendationScale(getMacdRecommendation()!)?.alias }}
+          </span>
         </div>
         <p class="indicator-disclaimer">
           <strong>Note:</strong> This recommendation is based purely on MACD analysis only and should not be considered as an overall assessment.
@@ -226,7 +255,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="chart">
         <canvas
           baseChart
@@ -246,7 +275,15 @@
       </p>
       
       <!-- RSI Recommendation -->
-      <div *ngIf="getRsiRecommendation()" class="indicator-recommendation" [style.border-color]="getRecommendationColor(getRsiRecommendation()!)" [style.background-color]="getRecommendationBackground(getRsiRecommendation()!)">
+      <div
+        *ngIf="getRsiRecommendation()"
+        class="indicator-recommendation"
+        [attr.data-type]="getRsiRecommendation()"
+        [style.border-color]="getRecommendationColor(getRsiRecommendation()!)"
+        [style.background-color]="getRecommendationBackground(getRsiRecommendation()!)"
+        [style.--recommendation-color]="getRecommendationColor(getRsiRecommendation()!)"
+        [style.--recommendation-bg]="getScaleBackground(getRecommendationScale(getRsiRecommendation()!)!)"
+      >
         <div class="indicator-header">
           <h4 class="indicator-title">RSI Recommendation: {{ getRecommendationScale(getRsiRecommendation()!)?.name }}</h4>
           <span class="indicator-alias">{{ getRecommendationScale(getRsiRecommendation()!)?.alias }}</span>
@@ -304,7 +341,15 @@
       </p>
       
       <!-- Bollinger Bands Recommendation -->
-      <div *ngIf="getBollingerRecommendation()" class="indicator-recommendation" [style.border-color]="getRecommendationColor(getBollingerRecommendation()!)" [style.background-color]="getRecommendationBackground(getBollingerRecommendation()!)">
+      <div
+        *ngIf="getBollingerRecommendation()"
+        class="indicator-recommendation"
+        [attr.data-type]="getBollingerRecommendation()"
+        [style.border-color]="getRecommendationColor(getBollingerRecommendation()!)"
+        [style.background-color]="getRecommendationBackground(getBollingerRecommendation()!)"
+        [style.--recommendation-color]="getRecommendationColor(getBollingerRecommendation()!)"
+        [style.--recommendation-bg]="getScaleBackground(getRecommendationScale(getBollingerRecommendation()!)!)"
+      >
         <div class="indicator-header">
           <h4 class="indicator-title">Bollinger Bands Recommendation: {{ getRecommendationScale(getBollingerRecommendation()!)?.name }}</h4>
           <span class="indicator-alias">{{ getRecommendationScale(getBollingerRecommendation()!)?.alias }}</span>

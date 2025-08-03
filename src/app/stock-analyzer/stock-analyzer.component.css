@@ -330,7 +330,6 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-
 .scale-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
@@ -368,30 +367,50 @@
 
 /* Indicator Recommendations */
 .indicator-recommendation {
-  border: 2px solid;
+  position: relative;
+  border: 1px solid rgba(226,232,240,0.3);
+  border-left-width: 6px;
+  border-left-style: solid;
+  border-left-color: transparent; /* overridden via inline binding */
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: rgba(255, 255, 255, 0.02); /* overridden inline if desired */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #cbd5e0;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .indicator-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .indicator-title {
-  color: #e2e8f0;
+  margin: 0;
   font-size: 1.125rem;
   font-weight: 600;
-  margin: 0;
+  color: #e2e8f0;
 }
 
-.indicator-alias,
+.indicator-alias {
+  font-style: italic;
+  font-size: 0.875rem;
+  color: #a0aec0;
+  margin-left: auto;
+}
+
 .indicator-analysis {
+  margin: 0 0 12px;
   color: #cbd5e0;
+  font-size: 0.875rem;
+  line-height: 1.4;
 }
 
 .indicator-disclaimer {
@@ -404,26 +423,150 @@
   font-weight: 500;
 }
 
-/* Current Recommendation */
-.comprehensive-description {
-  background: rgba(226,232,240,0.1);
-  border-left: 4px solid #3182ce;
-  border-radius: 8px;
-  padding: 16px;
-  color: #cbd5e0;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  margin: 0 0 20px;
-  font-style: italic;
+.indicator-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.indicator-detail strong {
+  display: inline-block;
+  min-width: 110px;
+}
+
+/* Recommendation Card (clean layout like indicator) */
+.recommendation-card {
+  border: 2px solid;
+  border-color: var(--recommendation-color, #3182ce);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  background: var(--recommendation-bg, rgba(255, 255, 255, 0.02));
+  color: inherit;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.recommendation-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.recommendation-title-block {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.recommendation-icon {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid currentColor;
+}
+
+.recommendation-main-text {
+  min-width: 0;
 }
 
 .recommendation-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: inherit;
+}
+
+.recommendation-subtitle {
+  margin: 4px 0 0;
+  font-size: 1rem;
+  font-style: italic;
+  color: inherit;
+}
+
+.confidence-block {
+  flex: 0 0 240px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.confidence-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: inherit;
+}
+
+.confidence-bar {
+  width: 100%;
+  height: 10px;
+  background: rgba(226, 232, 240, 0.15);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+
+.recommendation-description {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: inherit;
+}
+
+/* Details grid under the main header */
+.recommendation-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail-section h5 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 600;
   color: #e2e8f0;
 }
 
-.recommendation-subtitle,
-.recommendation-description,
-.confidence-label {
+.reasoning-list,
+.technical-list {
+  margin: 0;
+  padding-left: 20px;
+  list-style: disc;
+  color: #cbd5e0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.investment-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summary-item {
+  margin: 0;
+  font-size: 0.875rem;
   color: #cbd5e0;
 }
 
@@ -463,9 +606,14 @@
   .metric-card,
   .scale-card,
   .indicator-recommendation,
-  .chart {
+  .chart,
+  .recommendation-card {
     background: #000;
     border: 2px solid #e2e8f0;
+    color: #e2e8f0;
+  }
+
+  .detail-section h5 {
     color: #e2e8f0;
   }
 }
@@ -476,8 +624,13 @@
   .form-input,
   .submit-btn,
   .metric-card,
-  .scale-card {
+  .scale-card,
+  .recommendation-card {
     animation: none;
     transition: none;
+  }
+
+  .recommendation-card {
+    gap: 0;
   }
 }
