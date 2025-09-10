@@ -311,10 +311,15 @@ export class StockAnalyzerComponent implements AfterViewInit {
     return scale?.color || '#4a5568';
   }
 
-  getRecommendationBackground(type: string): string {
-    const scale = this.getRecommendationScale(type);
-    return scale?.background_color || '#f7fafc';
-  }
+getRecommendationBackground(type: string): string {
+  const scale = this.getRecommendationScale(type);
+  if (!scale) return 'rgba(255,255,255,0.02)';
+  // Use a low alpha so it's subtle like the scale cards
+  return this.hexToRgba(scale.background_color, 0.08);
+}
+
+
+
 
   getMacdRecommendation(): string | null {
     return this.technicalAnalysis?.macd_recommendation ?? null;
@@ -339,4 +344,21 @@ export class StockAnalyzerComponent implements AfterViewInit {
   getBollingerAnalysis(): string {
     return this.technicalAnalysis?.bollinger_analysis ?? '';
   }
+
+  private hexToRgba(hex: string, alpha = 1): string {
+  let c = hex.replace('#', '');
+  if (c.length === 3) {
+    c = c.split('').map(ch => ch + ch).join('');
+  }
+  const bigint = parseInt(c, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+getScaleBackground(scale: any): string {
+  const bg = scale.background_color ?? scale.backgroundColor ?? '#ffffff';
+  return this.hexToRgba(bg, 0.08);
+}
+
 }

@@ -1,38 +1,34 @@
-/* You can add global styles to this file, and also import other style files */
-
-/* Global CSS Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+/* reset any default spacing */
 html, body {
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  /* Base */
+  background-color: #000;
+  color: #e2e8f0;
+  font-family:
+    -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, sans-serif;
   line-height: 1.6;
-  color: #1a202c; /* Darker text for better contrast */
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Back to original purple gradient */
   min-height: 100vh;
-}
 
-/* Ensure app-root takes full height */
-app-root {
-  display: block;
-  min-height: 100vh;
-  width: 100%;
-}
-
-/* Remove any default styling from Angular components */
-:host {
-  display: block;
-  width: 100%;
-  height: 100%;
+  /* Bigger, fitting glows */
+  background-image:
+    /* darker blue glow top-left */
+    radial-gradient(
+      circle farthest-corner at 20% 20%,
+      rgba(49, 130, 206, 0.15),
+      rgba(49, 130, 206, 0) 70%
+    ),
+    /* lighter blue glow bottom-right */
+    radial-gradient(
+      circle farthest-corner at 80% 80%,
+      rgba(66, 153, 225, 0.15),
+      rgba(66, 153, 225, 0) 70%
+    );
+  background-repeat: no-repeat;
+  background-size: cover;
 }
